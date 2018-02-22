@@ -1,0 +1,33 @@
+.settings
+target
+*.DS_Store
+jdbctest.props
+*~
+
+.metadata
+RemoteSystemsTempFiles
+
+# Compiled class file
+*.class
+
+# Config Files Containing Passwords
+hibernate.cfg.xml
+persistence.xml
+
+# Log file
+*.log
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+hs_err_pid*
+
+.settings/

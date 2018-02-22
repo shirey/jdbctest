@@ -1,0 +1,13 @@
+db.server.name=db.server.billshirey.com
+db.port=1521
+db.username=db_schema_name
+db.password=
+
+#must provide either a jdbc url or an oracle sid
+#if no jdbc.url is provided an Oracle connection url will be generated using the sid
+jdbc.url=jdbc:oracle:thin:@db.server.billshirey.com:1521:osid
+sid=
+
+driver.class=oracle.jdbc.driver.OracleDriver
+test.query=select count(*) from MY_TABLE;
+
