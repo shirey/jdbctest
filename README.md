@@ -16,9 +16,10 @@ This program will test a connection and query to a database via JDBC
  
 To use this test class copy jdbctest.props.sample to jdbctest.props and edit
 to match your database information.  All parameters in the jdbctest.props
-are required except "sid" and "db.url".  If db.url is not provided then it
+are required except sid, db.server.name  and db.url.  If db.url is not provided then it
 is assumed you are connecting to Oracle and a url will be generated using
-the sid (which is then required).
+the sid (which is then required). If db.server.name is not provided the server name and port
+number are parsed from the db.url, which is then required.
  
 A jdbc library matching your db system must be included in the classpath when
 running.
