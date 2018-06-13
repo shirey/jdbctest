@@ -1,5 +1,8 @@
+#if server name is not specified the server name and port will be 
+#parsed from the jdbc.url
 db.server.name=db.server.billshirey.com
 db.port=1521
+
 db.username=db_schema_name
 db.password=
 

@@ -164,24 +164,32 @@ public class TestConnection
 			System.exit(1);
 		}
 		
-		serverName = props.getProperty("db.server.name");
-		portStr = props.getProperty("db.port");
+		serverName = props.getProperty("db.server.name", "");
+		portStr = props.getProperty("db.port", "");
 		sid = props.getProperty("sid");
 		username = props.getProperty("db.username");
 		password = props.getProperty("db.password");
 		driverClass = props.getProperty("driver.class");
 		testQuery = props.getProperty("test.query");
-		dbUrl = props.getProperty("db.url");
+		dbUrl = props.getProperty("db.url", "");
 		
-		testProperty(serverName, "db.server.name");
-		testProperty(portStr, "db.port");
 		testProperty(username, "db.username");
 		testProperty(password, "db.password");
 		testProperty(driverClass, "driver.class");
 		testProperty(testQuery, "test.query");
 		
-		portStr = portStr.trim();
+		if(isEmpty(serverName) && ! isEmpty(dbUrl))
+		{
+			try{setServerAndPortFromURL(dbUrl, driverClass);}
+			catch(Exception e)
+			{
+				System.out.println(e.getMessage());
+				System.exit(1);
+			}
+		}
+		
 		serverName = serverName.trim();
+		portStr = portStr.trim();
 		username = username.trim();
 		password = password.trim();
 		driverClass = driverClass.trim();
@@ -206,6 +214,69 @@ public class TestConnection
 		}
 		dbUrl = dbUrl.trim();
 	}	
+	
+	private static void setServerAndPortFromURL(String url, String driverName) throws Exception
+	{
+			boolean isSQLServer = false;
+			boolean isOracle = false;
+			String compDriver = driverName.trim().toUpperCase();
+			if(compDriver.contains(("SQLSERVER")))
+			{
+				isSQLServer = true;
+				portStr = "1433"; //default sql server port
+			}
+			else if(compDriver.contains(("ORACLE")))
+			{
+				isOracle = true;
+				portStr = "1521"; //default oracle port
+			}
+			String[] info = url.split(":");
+			if(isOracle)
+			{
+				serverName = info[3].substring(1);
+				String tLine = serverName.replaceAll("\\s", "");
+				//see if there is a host directive;
+				if(tLine.matches("(?i).*?\\(HOST=.+\\).*"))
+				{
+					String sLine = tLine.replaceFirst("(?i).*?\\(HOST=", "");
+					int lParen = sLine.indexOf(")");
+					serverName = sLine.substring(0, lParen);
+					if(tLine.matches("(?i).*?\\(PORT=.+\\).*"))
+					{
+						String pLine = tLine.replaceFirst("(?i).*?\\(PORT=", "");
+						portStr = pLine.substring(0, pLine.indexOf(")"));
+						System.out.println("Oracle port parsed from DESCRIPTION: " + portStr);
+					}
+				}
+				else
+				{
+					portStr = info[4];
+					System.out.println("Oracle port parsed from standard url: " + portStr);
+				}
+			}
+			else if(isSQLServer)
+			{
+				if(info[2].startsWith("//"))
+					info[2] = info[2].substring(2);
+				if(info[2].indexOf(";") > 0)
+					info[2] = info[2].substring(0, info[2].indexOf(";"));
+				if(info.length >= 4)
+				{
+					if(info[3].indexOf('\\') > 0)
+						info[3] = info[3].substring(0, info[3].indexOf("\\"));
+					if(info[3].indexOf(';') > 0)
+						info[3] = info[3].substring(0, info[3].indexOf(";"));
+					portStr = info[3];
+					System.out.println("SQL Server port parsed from url: " + portStr);
+				}
+				serverName = info[2];
+				System.out.println("SQL Server server name parsed from url: " + serverName);
+			}
+			else
+			{
+				throw new Exception("Database type could not be discovered from the JDBC driver name.");
+			}
+	}
 	
 	private static void testProperty(String val, String propName)
 	{
