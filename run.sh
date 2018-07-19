@@ -1,1 +1,1 @@
-java  -cp /opt/apache-tomcat-6.0.53/lib/ojdbc6-11.1.0.7.0.jar:target/db-connection-test.jar com.billshirey.jdbctest.TestConnection
+java  -cp lib/sqljdbc41.jar:target/db-connection-test.jar com.billshirey.jdbctest.TestConnection

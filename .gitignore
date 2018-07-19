@@ -2,6 +2,8 @@
 target
 *.DS_Store
 jdbctest.props
+jdbctest.props.oracle
+jdbctest.props.sqlserver
 *~
 
 .metadata
