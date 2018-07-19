@@ -73,6 +73,7 @@ public class TestConnection
 		{
 			System.err.println("Unable to load driver class " + driverClass);
 			System.err.println("Check to make sure the correct driver is specifed in the -cp argument in run.sh");
+			t.printStackTrace(System.err);
 			System.exit(1);
 		}
 		System.out.println("Driver " + driverClass + " Successfully loaded.");
